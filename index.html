@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Stone Bank - Secure Digital Banking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #005a87;
+            --secondary: #0086c3;
+            --accent: #00b8d4;
+            --light: #e3f2fd;
+            --dark: #002b44;
+            --success: #2E7D32;
+            --warning: #ED6C02;
+            --danger: #D32F2F;
+            --purple: #6A1B9A;
+            --card-shadow: 0 8px 24px rgba(0, 90, 135, 0.15);
+            --revenue-card: #e8f5e9;
+            --start: #5C6BC0;
+            --platinum: #78909C;
+            --gold: #FFB300;
+            --black: #455A64;
+            --header-bg: linear-gradient(to right, var(--primary), var(--secondary));
+            --footer-bg: linear-gradient(to right, var(--dark), #001f36);
+            --admin-bg: #f0f8ff;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-header: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        /* Admin Login Button */
+        .admin-login-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-login-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            background: var(--secondary);
+        }
+        
+        /* Admin Login Modal */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .admin-modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .admin-modal-content h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .admin-modal-content .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .admin-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .admin-form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-form-group input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 184, 212, 0.2);
+        }
+        
+        .admin-form-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-form-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+            z-index: 1500;
+            transition: right 0.4s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .admin-panel.open {
+            right: 0;
+        }
+        
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-header h2 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-section {
+            margin-bottom: 30px;
+        }
+        
+        .admin-section h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-option {
+            margin-bottom: 15px;
+        }
+        
+        .admin-option label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .admin-option input, .admin-option select, .admin-option textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .admin-option textarea {
+            min-height: 80px;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .admin-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn-save {
+            background: var(--success);
+            color: white;
+        }
+        
+        .admin-btn-save:hover {
+            background: #1b5e20;
+        }
+        
+        .admin-btn-reset {
+            background: #eee;
+            color: #555;
+        }
+        
+        .admin-btn-reset:hover {
+            background: #ddd;
+        }
+        
+        /* Header Styles */
+        header {
+            background: var(--header-bg);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-family: var(--font-header);
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: var(--font-header);
+        }
+        
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        nav ul li a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') no-repeat center center/cover;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 58, 97, 0.8);
+        }
+        
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            color: white;
+            width: 100%;
+        }
+        
+        .hero-text {
+            max-width: 700px;
+        }
+        
+        .hero-text h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-family: var(--font-header);
+        }
+        
+        .hero-text p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-header);
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(0, 184, 212, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: #00a5c0;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 184, 212, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 100px 20px;
+            background: var(--light);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            font-family: var(--font-header);
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 20px auto 0;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 134, 195, 0.1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 90, 135, 0.2);
+        }
+        
+        .service-icon {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            font-size: 4rem;
+        }
+        
+        .service-content {
+            padding: 30px;
+        }
+        
+        .service-content h3 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-family: var(--font-header);
+        }
+        
+        .service-content p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .service-content ul {
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .service-content ul li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        /* Account Plans Section */
+        .account-plans {
+            padding: 100px 20px;
+            background: white;
+        }
+        
+        .plans-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 134, 195, 0.1);
+        }
+        
+        .plan-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 90, 135, 0.25);
+        }
+        
+        .plan-header {
+            padding: 25px;
+            color: white;
+            text-align: center;
+        }
+        
+        .start-plan .plan-header {
+            background: linear-gradient(to right, var(--start), #7986CB);
+        }
+        
+        .platinum-plan .plan-header {
+            background: linear-gradient(to right, var(--platinum), #90A4AE);
+        }
+        
+        .gold-plan .plan-header {
+            background: linear-gradient(to right, var(--gold), #FFCA28);
+        }
+        
+        .black-plan .plan-header {
+            background: linear-gradient(to right, var(--black), #546E7A);
+        }
+        
+        .plan-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-family: var(--font-header);
+        }
+        
+        .plan-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+        
+        .plan-price span {
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+        
+        .plan-features {
+            padding: 30px;
+        }
+        
+        .feature {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feature:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .feature-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .plan-footer {
+            padding: 0 30px 30px;
+            text-align: center;
+        }
+        
+        /* Sub-Trust Section */
+        .sub-trust {
+            padding: 100px 20px;
+            background: var(--light);
+        }
+        
+        .trust-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .trust-image {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .trust-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .trust-content {
+            flex: 1;
+        }
+        
+        .trust-content h3 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-family: var(--font-header);
+        }
+        
+        .trust-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .trust-benefits {
+            margin-top: 30px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-icon {
+            color: var(--accent);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .benefit-text h4 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-family: var(--font-header);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: white;
+            padding: 70px 0 30px;
+            transition: background 0.3s ease;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+            font-family: var(--font-header);
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .footer-col p {
+            margin-bottom: 20px;
+            opacity: 0.8;
+            line-height: 1.8;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .contact-info {
+            list-style: none;
+        }
+        
+        .contact-info li {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-top: 4px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .trust-container {
+                flex-direction: column;
+            }
+            
+            .hero-text h2 {
+                font-size: 3rem;
+            }
+            
+            .admin-panel {
+                width: 320px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                flex-direction: column;
+                gap: 0;
+                padding: 20px 0;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                width: 100%;
+                text-align: center;
+            }
+            
+            nav ul li a {
+                display: block;
+                padding: 15px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-text h2 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-text p {
+                font-size: 1.1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .admin-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-text h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .plan-header h3 {
+                font-size: 1.5rem;
+            }
+            
+            .plan-price {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Button -->
+    <div class="admin-login-btn">
+        <i class="fas fa-cog"></i>
+    </div>
+    
+    <!-- Admin Login Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2><i class="fas fa-lock"></i> Admin Login</h2>
+            <div class="admin-form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </div>
+            <button class="admin-form-btn" id="adminLogin">Login</button>
+        </div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2><i class="fas fa-user-cog"></i> Admin Control Panel</h2>
+            <span class="close" id="closePanel">&times;</span>
+        </div>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-palette"></i> Color Scheme</h3>
+            <div class="admin-option">
+                <label for="primaryColor">Primary Color</label>
+                <input type="color" id="primaryColor" value="#005a87">
+            </div>
+            <div class="admin-option">
+                <label for="secondaryColor">Secondary Color</label>
+                <input type="color" id="secondaryColor" value="#0086c3">
+            </div>
+            <div class="admin-option">
+                <label for="accentColor">Accent Color</label>
+                <input type="color" id="accentColor" value="#00b8d4">
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-font"></i> Font Settings</h3>
+            <div class="admin-option">
+                <label for="mainFont">Main Font</label>
+                <select id="mainFont">
+                    <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Open Sans', sans-serif">Open Sans</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                </select>
+            </div>
+            <div class="admin-option">
+                <label for="headerFont">Header Font</label>
+                <select id="headerFont">
+                    <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Open Sans', sans-serif">Open Sans</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-image"></i> Image Management</h3>
+            <div class="admin-option">
+                <label for="headerImage">Header Background</label>
+                <input type="file" id="headerImage" accept="image/*">
+            </div>
+            <div class="admin-option">
+                <label for="footerImage">Footer Logo</label>
+                <input type="file" id="footerImage" accept="image/*">
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3><i class="fas fa-object-group"></i> Layout Options</h3>
+            <div class="admin-option">
+                <label for="layoutStyle">Layout Style</label>
+                <select id="layoutStyle">
+                    <option value="default">Default</option>
+                    <option value="boxed">Boxed Layout</option>
+                    <option value="full-width">Full Width</option>
+                </select>
+            </div>
+            <div class="admin-option">
+                <label for="headerStyle">Header Style</label>
+                <select id="headerStyle">
+                    <option value="default">Default</option>
+                    <option value="transparent">Transparent</option>
+                    <option value="solid">Solid Color</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="admin-actions">
+            <button class="admin-btn admin-btn-save" id="saveSettings">Save Settings</button>
+            <button class="admin-btn admin-btn-reset" id="resetSettings">Reset</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-gem fa-2x" style="color: var(--accent);"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Blue Stone Bank</h1>
+                    <p>Digital Banking for the Future</p>
+                </div>
+            </div>
+            
+            <nav>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#accounts">Accounts</a></li>
+                    <li><a href="#trust">Asset Protection</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" class="btn btn-secondary">Client Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Secure Your Wealth with Digital Banking Excellence</h2>
+                <p>Blue Stone Bank offers innovative financial solutions with cutting-edge technology and unparalleled asset protection through our exclusive Sub-Trust services.</p>
+                <div class="cta-buttons">
+                    <a href="#accounts" class="btn btn-primary">Open an Account</a>
+                    <a href="#trust" class="btn btn-secondary">Learn About Trust Protection</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="section-title">
+            <h2>Our Premium Services</h2>
+            <p>Comprehensive banking solutions tailored for the modern investor</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-building-columns"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Digital Banking Accounts</h3>
+                    <p>Experience seamless banking with our range of digital accounts:</p>
+                    <ul>
+                        <li>Multi-currency accounts with USD, EUR, GBP</li>
+                        <li>Instant global transfers with low fees</li>
+                        <li>Real-time transaction monitoring</li>
+                        <li>24/7 account access through our secure app</li>
+                    </ul>
+                    <a href="#accounts" class="btn btn-primary">View Account Options</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Premium Debit Cards</h3>
+                    <p>Exclusive debit cards designed for global citizens:</p>
+                    <ul>
+                        <li>Metal cards with advanced security features</li>
+                        <li>Worldwide ATM access with low fees</li>
+                        <li>Customizable spending limits</li>
+                        <li>Instant card freezing/unfreezing</li>
+                    </ul>
+                    <a href="#accounts" class="btn btn-primary">Explore Card Options</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Asset Protection Trust</h3>
+                    <p>Our exclusive Sub-Trust service provides unparalleled asset protection:</p>
+                    <ul>
+                        <li>Legal separation of personal and business assets</li>
+                        <li>Enhanced privacy and confidentiality</li>
+                        <li>Protection from creditors and lawsuits</li>
+                        <li>Estate planning and wealth preservation</li>
+                    </ul>
+                    <a href="#trust" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Crypto Investment Solutions</h3>
+                    <p>Integrated cryptocurrency services for modern investors:</p>
+                    <ul>
+                        <li>Secure crypto wallets with institutional-grade security</li>
+                        <li>Seamless crypto-to-fiat conversions</li>
+                        <li>Staking and yield generation services</li>
+                        <li>Portfolio management tools</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Account Plans Section -->
+    <section class="account-plans" id="accounts">
+        <div class="section-title">
+            <h2>Premium Account Options</h2>
+            <p>Choose the account that best fits your financial needs and lifestyle</p>
+        </div>
+        
+        <div class="plans-container">
+            <div class="plan-card start-plan">
+                <div class="plan-header">
+                    <h3>Start Account</h3>
+                    <p>Perfect for digital banking beginners</p>
+                    <div class="plan-price">$20<span>/month</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-label">Monthly Fee</span>
+                        <span class="feature-value">$20</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Annual Fee (20% off)</span>
+                        <span class="feature-value">$192</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Type</span>
+                        <span class="feature-value">Plastic</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Cost</span>
+                        <span class="feature-value">$400</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">ATM Withdrawal Fee</span>
+                        <span class="feature-value">$3/op</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">FX Conversion Fee</span>
+                        <span class="feature-value">3%</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Daily ATM Limit</span>
+                        <span class="feature-value">$1,000</span>
+                    </div>
+                </div>
+                <div class="plan-footer">
+                    <a href="#contact" class="btn btn-primary">Open Account</a>
+                </div>
+            </div>
+            
+            <div class="plan-card platinum-plan">
+                <div class="plan-header">
+                    <h3>Platinum Account</h3>
+                    <p>For frequent travelers and global citizens</p>
+                    <div class="plan-price">$15<span>/month</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-label">Monthly Fee</span>
+                        <span class="feature-value">$15</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Annual Fee (20% off)</span>
+                        <span class="feature-value">$144</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Type</span>
+                        <span class="feature-value">Metal</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Cost</span>
+                        <span class="feature-value">$600</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">ATM Withdrawal Fee</span>
+                        <span class="feature-value">$2/op</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">FX Conversion Fee</span>
+                        <span class="feature-value">2.5%</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Daily ATM Limit</span>
+                        <span class="feature-value">$5,000</span>
+                    </div>
+                </div>
+                <div class="plan-footer">
+                    <a href="#contact" class="btn btn-primary">Open Account</a>
+                </div>
+            </div>
+            
+            <div class="plan-card gold-plan">
+                <div class="plan-header">
+                    <h3>Gold Account</h3>
+                    <p>Premium services for established professionals</p>
+                    <div class="plan-price">$13<span>/month</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-label">Monthly Fee</span>
+                        <span class="feature-value">$13</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Annual Fee (20% off)</span>
+                        <span class="feature-value">$125</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Type</span>
+                        <span class="feature-value">Metal Premium</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Cost</span>
+                        <span class="feature-value">$800</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">ATM Withdrawal Fee</span>
+                        <span class="feature-value">$1.5/op</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">FX Conversion Fee</span>
+                        <span class="feature-value">2%</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Daily ATM Limit</span>
+                        <span class="feature-value">$10,000</span>
+                    </div>
+                </div>
+                <div class="plan-footer">
+                    <a href="#contact" class="btn btn-primary">Open Account</a>
+                </div>
+            </div>
+            
+            <div class="plan-card black-plan">
+                <div class="plan-header">
+                    <h3>Black Account</h3>
+                    <p>Ultimate banking experience for high-net-worth individuals</p>
+                    <div class="plan-price">$10<span>/month</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature">
+                        <span class="feature-label">Monthly Fee</span>
+                        <span class="feature-value">$10</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Annual Fee (20% off)</span>
+                        <span class="feature-value">$96</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Type</span>
+                        <span class="feature-value">Metal Exclusive</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Card Cost</span>
+                        <span class="feature-value">$1,000</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">ATM Withdrawal Fee</span>
+                        <span class="feature-value">$1/op</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">FX Conversion Fee</span>
+                        <span class="feature-value">1.5%</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-label">Daily ATM Limit</span>
+                        <span class="feature-value">$20,000</span>
+                    </div>
+                </div>
+                <div class="plan-footer">
+                    <a href="#contact" class="btn btn-primary">Open Account</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sub-Trust Section -->
+    <section class="sub-trust" id="trust">
+        <div class="section-title">
+            <h2>Asset Protection Trust</h2>
+            <p>Secure your wealth with our exclusive Sub-Trust service</p>
+        </div>
+        
+        <div class="trust-container">
+            <div class="trust-image">
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Asset Protection">
+            </div>
+            <div class="trust-content">
+                <h3>Protect Your Assets with Our Exclusive Sub-Trust Service</h3>
+                <p>The Blue Stone Bank Sub-Trust service provides unparalleled asset protection through a sophisticated legal structure that safeguards your wealth from creditors, lawsuits, and unnecessary taxation.</p>
+                <p>Our proprietary trust framework ensures that your assets remain under your control while being legally protected from external threats. This service is available exclusively to our Gold and Black account holders.</p>
+                
+                <div class="trust-benefits">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Enhanced Asset Protection</h4>
+                            <p>Legal separation of assets from personal ownership</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Privacy & Confidentiality</h4>
+                            <p>Assets held anonymously through our proprietary structure</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>International Compliance</h4>
+                            <p>Full compliance with international banking regulations</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Wealth Preservation</h4>
+                            <p>Strategies to minimize tax liabilities and maximize growth</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons" style="margin-top: 30px;">
+                    <a href="#contact" class="btn btn-primary">Request Trust Consultation</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Blue Stone Bank</h3>
+                <p>Providing innovative digital banking solutions with cutting-edge technology and unparalleled asset protection services.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#accounts">Account Plans</a></li>
+                    <li><a href="#trust">Asset Protection</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Account Types</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Start Account</a></li>
+                    <li><a href="#">Platinum Account</a></li>
+                    <li><a href="#">Gold Account</a></li>
+                    <li><a href="#">Black Account</a></li>
+                    <li><a href="#">Business Accounts</a></li>
+                    <li><a href="#">Corporate Trusts</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Us</h3>
+                <ul class="contact-info">
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Financial District, Panama City, Panama</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <span>+507 1234 5678</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <span>info@bluestonebank.com</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-clock"></i>
+                        <span>24/7 Customer Support</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Blue Stone Bank. All rights reserved. Master Trust Banking License #BSB-MT-2023</p>
+        </div>
+    </footer>
+
+    <script>
+        // Admin Panel Functionality
+        const adminLoginBtn = document.querySelector('.admin-login-btn');
+        const adminModal = document.getElementById('adminModal');
+        const closeModal = document.getElementById('closeModal');
+        const adminPanel = document.getElementById('adminPanel');
+        const closePanel = document.getElementById('closePanel');
+        const adminLogin = document.getElementById('adminLogin');
+        const saveSettings = document.getElementById('saveSettings');
+        const resetSettings = document.getElementById('resetSettings');
+        
+        // Password for admin access
+        const ADMIN_PASSWORD = "admin123";
+        
+        // Show admin modal
+        adminLoginBtn.addEventListener('click', () => {
+            adminModal.style.display = 'flex';
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            adminModal.style.display = 'none';
+        });
+        
+        // Close admin panel
+        closePanel.addEventListener('click', () => {
+            adminPanel.classList.remove('open');
+        });
+        
+        // Admin login
+        adminLogin.addEventListener('click', () => {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                adminModal.style.display = 'none';
+                adminPanel.classList.add('open');
+            } else {
+                alert('Incorrect password. Please try again.');
+            }
+        });
+        
+        // Load saved settings
+        function loadSettings() {
+            const savedSettings = JSON.parse(localStorage.getItem('blueStoneSettings')) || {};
+            
+            if (savedSettings.primary) {
+                document.documentElement.style.setProperty('--primary', savedSettings.primary);
+                document.getElementById('primaryColor').value = savedSettings.primary;
+            }
+            
+            if (savedSettings.secondary) {
+                document.documentElement.style.setProperty('--secondary', savedSettings.secondary);
+                document.getElementById('secondaryColor').value = savedSettings.secondary;
+            }
+            
+            if (savedSettings.accent) {
+                document.documentElement.style.setProperty('--accent', savedSettings.accent);
+                document.getElementById('accentColor').value = savedSettings.accent;
+            }
+            
+            if (savedSettings.mainFont) {
+                document.documentElement.style.setProperty('--font-main', savedSettings.mainFont);
+                document.getElementById('mainFont').value = savedSettings.mainFont;
+            }
+            
+            if (savedSettings.headerFont) {
+                document.documentElement.style.setProperty('--font-header', savedSettings.headerFont);
+                document.getElementById('headerFont').value = savedSettings.headerFont;
+            }
+        }
+        
+        // Save settings
+        saveSettings.addEventListener('click', () => {
+            const settings = {
+                primary: document.getElementById('primaryColor').value,
+                secondary: document.getElementById('secondaryColor').value,
+                accent: document.getElementById('accentColor').value,
+                mainFont: document.getElementById('mainFont').value,
+                headerFont: document.getElementById('headerFont').value
+            };
+            
+            localStorage.setItem('blueStoneSettings', JSON.stringify(settings));
+            
+            // Apply settings immediately
+            document.documentElement.style.setProperty('--primary', settings.primary);
+            document.documentElement.style.setProperty('--secondary', settings.secondary);
+            document.documentElement.style.setProperty('--accent', settings.accent);
+            document.documentElement.style.setProperty('--font-main', settings.mainFont);
+            document.documentElement.style.setProperty('--font-header', settings.headerFont);
+            
+            alert('Settings saved successfully!');
+        });
+        
+        // Reset settings
+        resetSettings.addEventListener('click', () => {
+            localStorage.removeItem('blueStoneSettings');
+            
+            // Reset to defaults
+            document.documentElement.style.setProperty('--primary', '#005a87');
+            document.documentElement.style.setProperty('--secondary', '#0086c3');
+            document.documentElement.style.setProperty('--accent', '#00b8d4');
+            document.documentElement.style.setProperty('--font-main', "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif");
+            document.documentElement.style.setProperty('--font-header', "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif");
+            
+            document.getElementById('primaryColor').value = '#005a87';
+            document.getElementById('secondaryColor').value = '#0086c3';
+            document.getElementById('accentColor').value = '#00b8d4';
+            document.getElementById('mainFont').value = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            document.getElementById('headerFont').value = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            
+            alert('Settings reset to defaults!');
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.querySelector('nav ul');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('show') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (navMenu.classList.contains('show')) {
+                        navMenu.classList.remove('show');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+        });
+        
+        // Load settings on page load
+        window.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>
